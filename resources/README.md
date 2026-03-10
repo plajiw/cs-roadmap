@@ -5,6 +5,7 @@ Esta pasta agrupa recursos auxiliares que ajudam no estudo e na manutencao do re
 ## Estrutura
 
 - [glossary.md](glossary.md): glossario de termos recorrentes.
+- [note-review-style.md](note-review-style.md): guia de estilo para revisar, corrigir e expandir anotacoes.
 - [tools.md](tools.md): ferramentas, stacks e utilitarios usados ao longo da trilha.
 - [templates](templates): modelos padrao para criar novos modulos e novas areas de estudo.
 
