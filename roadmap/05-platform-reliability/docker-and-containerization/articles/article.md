@@ -1,0 +1,2 @@
+- Docker na pratica: como construir uma aplicacao
+	- https://blog.geekhunter.com.br/docker-na-pratica-como-construir-uma-aplicacao/

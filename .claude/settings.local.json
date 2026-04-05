@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p leetcode hackerrank beecrowd codeforces)",
+      "Bash(touch leetcode/.gitkeep hackerrank/.gitkeep beecrowd/.gitkeep codeforces/.gitkeep)",
+      "Bash(rm -f .gitkeep)"
+    ]
+  }
+}

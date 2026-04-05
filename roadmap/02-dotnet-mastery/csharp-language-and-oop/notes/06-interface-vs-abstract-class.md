@@ -134,27 +134,27 @@ Para aprendizado de orientação a objetos, esse modelo tradicional ainda é o m
 ```cs
 public interface ISerializer
 {
-	string Serialize();
+ string Serialize();
 }
 
 public class Invoice : ISerializer
 {
-	public decimal Total { get; set; }
+ public decimal Total { get; set; }
 
-	public string Serialize()
-	{
-		return $"Invoice: {Total}";
-	}
+ public string Serialize()
+ {
+  return $"Invoice: {Total}";
+ }
 }
 
 public class AuditLog : ISerializer
 {
-	public DateTime CreatedAt { get; set; }
+ public DateTime CreatedAt { get; set; }
 
-	public string Serialize()
-	{
-		return $"AuditLog: {CreatedAt:O}";
-	}
+ public string Serialize()
+ {
+  return $"AuditLog: {CreatedAt:O}";
+ }
 }
 ```
 
@@ -165,24 +165,24 @@ Nesse caso, `Invoice` e `AuditLog` não precisam ter a mesma classe base. O que 
 ```cs
 public abstract class Shape
 {
-	public string Name { get; set; }
+ public string Name { get; set; }
 
-	public abstract double CalculateArea();
+ public abstract double CalculateArea();
 
-	public void PrintName()
-	{
-		Console.WriteLine(Name);
-	}
+ public void PrintName()
+ {
+  Console.WriteLine(Name);
+ }
 }
 
 public class Square : Shape
 {
-	public double Side { get; set; }
+ public double Side { get; set; }
 
-	public override double CalculateArea()
-	{
-		return Side * Side;
-	}
+ public override double CalculateArea()
+ {
+  return Side * Side;
+ }
 }
 ```
 
