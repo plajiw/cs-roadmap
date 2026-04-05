@@ -22,9 +22,25 @@ void initCircularQueue(CircularQueue* q, int capacity)
     q->capacity = capacity;
 }
 
-void destroyCircularQueue(CircularQueue* q);
+void destroyCircularQueue(CircularQueue* q)
+{
+    if (q->data == NULL)
+        return;
 
-void clearCircularQueue(CircularQueue* q);
+    free(q->data);
+    q->data = NULL;
+    q->front = 0;
+    q->rear = 0;
+    q->size = 0;
+    q->capacity = 0;
+}
+
+void clearCircularQueue(CircularQueue* q)
+{
+    q->front = 0;
+    q->rear = 0;
+    q->size = 0;
+}
 
 bool isEmpty(CircularQueue* q)
 {
@@ -40,7 +56,7 @@ void enqueue(CircularQueue* q, int item)
 {
     if (isFull(q))
     {
-        printf("Fila esta cheia");
+        printf("[Erro] - Fila esta cheia\n");
         return;
     }
 
@@ -53,11 +69,11 @@ void dequeue(CircularQueue* q)
 {
     if (isEmpty(q))
     {
-        printf("Fila esta vazia");
+        printf("[Erro] - Fila esta vazia\n");
         return;
     }
 
-    q->front = (q->front + 1 % q->capacity);
+    q->front = (q->front + 1) % q->capacity;
     q->size--;
 }
 
@@ -65,7 +81,7 @@ int indexElement(CircularQueue* q, int item)
 {
     if (isEmpty(q))
     {
-        printf("Fila esta vazia");
+        printf("[Erro] - Fila esta vazia\n");
         return ERROR_CODE;
     }
 
@@ -80,16 +96,69 @@ int indexElement(CircularQueue* q, int item)
     return ERROR_CODE;
 }
 
-int first(CircularQueue* q)
+int front(CircularQueue* q)
 {
+    if (isEmpty(q))
+    {
+        printf("[Erro] - Fila esta vazia\n");
+        return ERROR_CODE;
+    }
+
     return q->front;
 }
 
-int last(CircularQueue* q)
+int rear(CircularQueue* q)
 {
+    if (isEmpty(q))
+    {
+        printf("[Erro] - Fila esta vazia\n");
+        return ERROR_CODE;
+    }
+
     return q->rear;
+}
+
+int first(CircularQueue *q)
+{
+    if (isEmpty(q))
+    {
+        printf("[Erro] - Fila esta vazia\n");
+        return ERROR_CODE;
+    }
+
+    return q->data[front(q)];
+}
+
+int last(CircularQueue *q)
+{
+    if (isEmpty(q))
+    {
+        printf("[Erro] - Fila esta vazia\n");
+        return ERROR_CODE;
+    }
+    
+    return q->data[rear(q)];
 }
 
 void printCircularQueue(CircularQueue* q)
 {
+    if (isEmpty(q))
+    {
+        printf("[Erro] - Fila esta vazia\n");
+        return;
+    }
+
+    printf("[");
+
+    for (int i = 0; i < q->size; i++)
+    {
+        int pos = (q->front + i) % q->capacity;
+
+        if (i > 0)
+            printf(", ");
+
+        printf("%d", q->data[pos]);
+    }
+
+    printf("]\n");
 }

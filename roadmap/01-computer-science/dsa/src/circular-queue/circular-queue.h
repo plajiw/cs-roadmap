@@ -1,7 +1,7 @@
-#include <stdbool.h>
-
 #ifndef CIRCULAR_QUEUE_H
 #define CIRCULAR_QUEUE_H
+
+#include <stdbool.h>
 
 typedef struct queue
 {
@@ -28,9 +28,13 @@ void dequeue(CircularQueue* q);
 
 int indexElement(CircularQueue* q, int item);
 
-int first(CircularQueue* q);
+int front(CircularQueue* q);
 
-int last(CircularQueue* q);
+int rear(CircularQueue* q);
+
+int first(CircularQueue *q);
+
+int last(CircularQueue *q);
 
 void printCircularQueue(CircularQueue* q);
 
