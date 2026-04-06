@@ -924,6 +924,75 @@ Migration: AddEmailToUsers
 
 ## Redes & Comunicação
 
+### Índice de Mensageria
+
+- Broker
+- Producer
+- Consumer
+- Fila
+- Tópico
+- Pub/Sub
+- AMQP
+- Kafka
+- RabbitMQ
+- Retry
+- Dead Letter Queue (DLQ)
+- Idempotência
+- Ordenação de Mensagens
+- Entrega At-Least-Once / At-Most-Once / Exactly-Once
+
+---
+
+### Broker
+
+**Nível**: Intermediário  
+**Definição**: Componente de infraestrutura que intermedia comunicação assíncrona entre serviços, recebendo mensagens de produtores e entregando a consumidores conforme regras de roteamento e entrega.
+
+**Origem**: Do inglês "broker" (intermediário/corretor), adotado em sistemas distribuídos para representar o mediador de mensagens.
+
+**Explicação Técnica**: O broker resolve um problema central de sistemas distribuídos: desacoplar produtores e consumidores no tempo, no contrato e na disponibilidade. Em vez de chamada direta (HTTP síncrono), o produtor publica uma mensagem; o consumidor processa quando estiver disponível.
+
+**Componentes principais**:
+
+- **Producer**: publica mensagens
+- **Broker**: recebe, persiste, roteia e controla entrega
+- **Destination**: fila (queue) ou tópico (topic)
+- **Consumer Group**: conjunto de consumidores que compartilham carga
+- **Dead Letter Queue (DLQ)**: destino para mensagens que falharam repetidamente
+
+**Modelos de comunicação**:
+
+- **Point-to-point (fila)**: cada mensagem é consumida uma vez por um consumidor do grupo
+- **Pub/Sub (tópico)**: a mesma mensagem pode ser entregue para múltiplos assinantes
+
+**Semântica de entrega (trade-off entre simplicidade e consistência)**:
+
+- **At-most-once**: pode perder mensagem, evita duplicidade
+- **At-least-once**: não perde mensagem facilmente, pode gerar duplicidade
+- **Exactly-once**: reduz perdas e duplicidades, com maior custo e complexidade
+
+**Conceitos operacionais essenciais**:
+
+- **ACK/NACK**: confirma ou rejeita processamento
+- **Retry com backoff**: retentativas progressivas para falhas transitórias
+- **Idempotência**: consumidor deve tolerar reprocessamento sem efeito colateral duplicado
+- **Ordenação**: geralmente garantida por partição/chave, não globalmente
+- **Persistência e retenção**: define durabilidade, replay e janela de reprocessamento
+
+**Critérios práticos de implementação**:
+
+1. Definir contrato de mensagem (schema e versionamento)
+2. Escolher chave de partição para equilíbrio e ordenação
+3. Implementar idempotência no consumidor
+4. Configurar retry, DLQ e observabilidade (lag, throughput, taxa de erro)
+5. Definir SLA de latência e estratégia de retenção
+
+**Tecnologias comuns**: RabbitMQ (AMQP, roteamento flexível), Apache Kafka (log distribuído, alto throughput e replay), Azure Service Bus e AWS SQS/SNS (serviços gerenciados).
+
+**Relacionado**: Microservices, SOA, TCP/IP, DNS, Retry, Dead Letter Queue (DLQ), Idempotência, Pub/Sub, Kafka, RabbitMQ
+
+---
+
 ### TCP/IP
 
 **Nível**: Intermediário  
@@ -1339,22 +1408,3 @@ Fácil testar
 **Relacionado**: Testing, Design Patterns, Code Smells, Clean Code
 
 ---
-
-## 📌 Padrão de Registro
-
-Cada termo no glossário segue estrutura:
-
-```markdown
-### [Termo]
-
-**Nível**: [Iniciante | Intermediário | Avançado]
-**Definição**: [Uma linha, concisa]
-
-**Origem**: [Histórico/contexto]
-
-**Explicação Técnica**: [Detalhamento aprofundado]
-
-**Relacionado**: [Termos vinculados]
-
-**Referências**: [Links/citações opcionais]
-```
