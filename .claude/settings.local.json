@@ -3,7 +3,10 @@
     "allow": [
       "Bash(mkdir -p leetcode hackerrank beecrowd codeforces)",
       "Bash(touch leetcode/.gitkeep hackerrank/.gitkeep beecrowd/.gitkeep codeforces/.gitkeep)",
-      "Bash(rm -f .gitkeep)"
+      "Bash(rm -f .gitkeep)",
+      "Bash(mv \"roadmap/02-dotnet-mastery/csharp-language-and-oop/src/exercicies/Interface.cs\" \"roadmap/02-dotnet-mastery/csharp-language-and-oop/src/exercicies/NumericTransformationPipeline.cs\")",
+      "Bash(mv \"roadmap/02-dotnet-mastery/csharp-language-and-oop/src/exercicies/ListExtensions.cs\" \"roadmap/02-dotnet-mastery/csharp-language-and-oop/src/exercicies/ListFilterExtensions.cs\")",
+      "Bash(mv \"roadmap/02-dotnet-mastery/csharp-language-and-oop/src/exercicies\" \"roadmap/02-dotnet-mastery/csharp-language-and-oop/src/exercises\")"
     ]
   }
 }
