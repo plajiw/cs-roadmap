@@ -1,11 +1,11 @@
-# 06-system-design-case-studies
+# 01-computer-science-foundations
 
-Trilha de consolidacao: aplica conhecimentos anteriores em cenarios de design e decisoes tecnicas.
+Fundamentos de ciencia da computacao para sustentar as trilhas aplicadas.
 
 ## Subtemas em ordem
 
-1. `01-decision-records-and-trade-offs`
-2. `02-system-design-scenarios`
+1. `01-data-structures-and-algorithms`
+2. `02-computer-systems-and-low-level`
 
 ## Estrutura interna de cada subtema
 

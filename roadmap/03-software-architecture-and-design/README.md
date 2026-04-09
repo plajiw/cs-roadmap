@@ -1,11 +1,12 @@
-# 06-system-design-case-studies
+# 03-software-architecture-and-design
 
-Trilha de consolidacao: aplica conhecimentos anteriores em cenarios de design e decisoes tecnicas.
+Trilha focada em principios e padroes para estruturar software de forma evolutiva.
 
 ## Subtemas em ordem
 
-1. `01-decision-records-and-trade-offs`
-2. `02-system-design-scenarios`
+1. `01-architectural-styles`
+2. `02-software-design-patterns`
+3. `03-clean-architecture`
 
 ## Estrutura interna de cada subtema
 

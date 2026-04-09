@@ -1,11 +1,12 @@
-# 06-system-design-case-studies
+# 04-distributed-systems
 
-Trilha de consolidacao: aplica conhecimentos anteriores em cenarios de design e decisoes tecnicas.
+Trilha para estudar comunicacao, consistencia, falhas e escala em sistemas distribuidos.
 
 ## Subtemas em ordem
 
-1. `01-decision-records-and-trade-offs`
-2. `02-system-design-scenarios`
+1. `01-distributed-systems-theory`
+2. `02-service-communication-patterns`
+3. `03-distributed-system-patterns`
 
 ## Estrutura interna de cada subtema
 

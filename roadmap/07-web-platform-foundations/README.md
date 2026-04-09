@@ -1,11 +1,11 @@
-# 06-system-design-case-studies
+# 07-web-platform-foundations
 
-Trilha de consolidacao: aplica conhecimentos anteriores em cenarios de design e decisoes tecnicas.
+Fundamentos de web moderna para reforcar base de frontend e runtime JavaScript.
 
 ## Subtemas em ordem
 
-1. `01-decision-records-and-trade-offs`
-2. `02-system-design-scenarios`
+1. `01-javascript-language-and-runtime`
+2. `02-dom-and-web-apis`
 
 ## Estrutura interna de cada subtema
 

@@ -5,6 +5,7 @@ Thumbs.db
 *.swp
 *.swo
 .vscode/
+.claude/
 .idea/
 *.code-workspace
 *.sublime-workspace
@@ -57,8 +58,8 @@ out/
 .cache/
 *.min.js
 *.bundle.js
-package-lock.json    # remova se quiser versionar
-yarn.lock           # remova se quiser versionar
+package-lock.json
+yarn.lock           
 pnpm-lock.yaml
 .env
 .env.local
