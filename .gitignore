@@ -4,7 +4,8 @@ Thumbs.db
 *.temp
 *.swp
 *.swo
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .claude/
 .idea/
 *.code-workspace

@@ -1,0 +1,111 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C: Build current file (debug)",
+            "command": "gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-std=c17",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "-O0",
+                "${file}",
+                "-I",
+                "${fileDirname}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compila o arquivo .c atual com flags uteis para estudos."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C: Compilar todos os .c da pasta (multi-file)",
+            "command": "gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-std=c17",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "-O0",
+                "${fileDirname}/*.c",
+                "-I",
+                "${fileDirname}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Compila todos os .c da pasta (ideal para .h + varios .c)."
+        },
+        {
+            "type": "shell",
+            "label": "C: Executar arquivo atual",
+            "command": "${fileDirname}/${fileBasenameNoExtension}.exe",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "dependsOn": "C: Build current file (debug)",
+            "problemMatcher": [],
+            "detail": "Compila e executa o arquivo .c atual."
+        },
+        {
+            "type": "shell",
+            "label": "C: Compilar pasta e executar",
+            "command": "${fileDirname}/${fileBasenameNoExtension}.exe",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "dependsOn": "C: Compilar todos os .c da pasta (multi-file)",
+            "problemMatcher": [],
+            "detail": "Compila todos os .c da pasta e executa o binario gerado."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C++: Compilar todos os .cpp da pasta (multi-file)",
+            "command": "g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-std=c++20",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "-O0",
+                "${fileDirname}/*.cpp",
+                "-I",
+                "${fileDirname}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Compila todos os .cpp da pasta com padrao moderno e warnings uteis."
+        }
+    ]
+}
