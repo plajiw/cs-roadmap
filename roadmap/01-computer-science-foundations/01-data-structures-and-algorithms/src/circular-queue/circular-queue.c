@@ -11,7 +11,7 @@ void initCircularQueue(CircularQueue* q, int capacity)
     if (capacity <= 0)
         return;
 
-    q->data = malloc(sizeof(int) * capacity);
+    q->data = (int*)malloc(sizeof(int) * capacity);
 
     if (q->data == NULL)
         return;
@@ -90,7 +90,7 @@ int indexElement(CircularQueue* q, int item)
         int pos = (q->front + i) % q->capacity;
 
         if (q->data[pos] == item)
-            return pos;
+            return pos - 1;
     }
 
     return ERROR_CODE;

@@ -59,7 +59,7 @@ int main()
     printf("Indice do 302: %d\n", idx);
 
     idx = indexElement(&q, 999);
-    printf("Indice do 999: %d\n\n", idx);
+    printf("Indice do 999: %d\n\n", idx); // não existe esse elemento
 
     printCircularQueue(&q);
     clearCircularQueue(&q);

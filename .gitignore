@@ -99,8 +99,6 @@ target/
 *.sqlite3
 *.mdb
 *.accdb
-
-# C/C++ local build outputs
 **/main
 *.d
 *.a
