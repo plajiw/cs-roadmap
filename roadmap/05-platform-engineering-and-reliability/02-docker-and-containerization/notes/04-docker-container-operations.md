@@ -211,6 +211,136 @@ docker container --help
 
 Um container não tem como interagir com outro container, mesmo que ambos contenham as mesmas imagens. Cada container executa em seu próprio espaço isolado de processo, arquivo e rede. A comunicação entre containers requer configuração explícita de redes Docker.
 
-## Mapeamento de diretórios
+## Mapeamento de diretórios (Volumes)
 
-### 
+### Motivação
+
+Além de compartilhar portas, é frequente compartilhar diretórios do host com o container. Volumes permitem que a aplicação dentro do container acesse ou modifique arquivos no host, viabilizando:
+
+- Desenvolvimento local com código sincronizado
+- Persistência de dados
+- Compartilhamento de configurações
+- Acesso a arquivos do sistema hospedeiro
+
+### Conceito
+
+Quando você mapeia uma porta (ex: `-p 8080:80`), o nginx internamente captura o diretório `/usr/share/nginx/html` em sua porta 80 e disponibiliza na porta 8080 do host.
+
+Com volumes, você mapeia uma pasta do host para uma pasta do container. Isto permite que quando você acessar a rota do container, ele acesse arquivos do seu host.
+
+### Sintaxe
+
+```bash
+docker container run --name <nome> -p <porta-host>:<porta-container> -v <caminho-host>:<caminho-container> -d <imagem>
+```
+
+**Explicação dos parâmetros:**
+- `-v <caminho-host>:<caminho-container>`: Mapeia diretório
+  - `<caminho-host>`: Diretório no host (caminho absoluto ou relativo)
+  - `<caminho-container>`: Diretório dentro do container
+
+### Exemplo prático: Nginx com conteúdo local
+
+Criar diretório para servir conteúdo:
+
+```bash
+mkdir html
+cd html
+```
+
+Criar e executar container com volume mapeado:
+
+```bash
+docker container run --name ws3 -p 8080:80 -v $(pwd):/usr/share/nginx/html -d nginx
+```
+
+Neste exemplo:
+1. Container `ws3` criado a partir de `nginx`
+2. Porta 8080 do host mapeia para porta 80 do container
+3. Diretório atual (`$(pwd)`) do host mapeia para `/usr/share/nginx/html` no container
+4. `-d`: Executa em background
+
+**Resultado:** Arquivos em `~/html/` são servidos pelo nginx na porta 8080
+
+### Considerações em Windows (Git Bash / MINGW64)
+
+No Windows com Git Bash, pode ser necessário usar uma variável de ambiente para evitar conversão automática de caminhos:
+
+```bash
+MSYS_NO_PATHCONV=1 docker run --name ws3 -p 8080:80 -v "$(pwd):/usr/share/nginx/html" -d nginx
+```
+
+**Saída esperada:**
+```
+f26d4c870c710d0c619a555f6ddcc91ca308fcbb273c7930b7c88830c2a267b4
+```
+
+### Verificar mapeamento de volumes
+
+Para inspecionar como o volume foi mapeado:
+
+```bash
+docker container inspect ws3
+```
+
+**Seção "Mounts" da resposta:**
+
+```json
+"Mounts": [
+  {
+    "Type": "bind",
+    "Source": "C:\\Users\\PabloRibeiroRamos\\Documents\\html",
+    "Destination": "/usr/share/nginx/html",
+    "Mode": "",
+    "RW": true,
+    "Propagation": "rprivate"
+  }
+],
+```
+
+| Campo         | Significado                 |
+| ------------- | --------------------------- |
+| `Type`        | `bind` = diretório do host  |
+| `Source`      | Caminho absoluto no host    |
+| `Destination` | Caminho dentro do container |
+| `RW`          | true = leitura e escrita    |
+| `Propagation` | `rprivate` = isolado        |
+
+## Containers com runtimes específicas
+
+Além de imagens genéricas, Docker oferece imagens prontas para linguagens e runtimes específicas.
+
+### Container Docker .NET
+
+Para trabalhar com .NET dentro de um container, use a imagem oficial do Microsoft:
+
+```bash
+docker container run --name demonet -it mcr.microsoft.com/dotnet/sdk:8.0
+```
+
+**Parâmetros:**
+- `--name demonet`: Nome do container
+- `-it`: Modo interativo com terminal
+- `mcr.microsoft.com/dotnet/sdk:8.0`: Imagem do .NET SDK 8.0
+
+### Operações disponíveis no container .NET
+
+Dentro do container, você tem acesso a ferramentas padrão do .NET:
+
+| Comando              | Descrição               |
+| -------------------- | ----------------------- |
+| `dotnet new`         | Criar novo projeto      |
+| `dotnet build`       | Compilar projeto        |
+| `dotnet run`         | Executar aplicação      |
+| `dotnet restore`     | Restaurar pacotes NuGet |
+| `dotnet add package` | Adicionar pacote NuGet  |
+
+**Exemplo:**
+
+```bash
+# Dentro do container
+dotnet new console -n meuapp
+cd meuapp
+dotnet build
+dotnet run
+```
