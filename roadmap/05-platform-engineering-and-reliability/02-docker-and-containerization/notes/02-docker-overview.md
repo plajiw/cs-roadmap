@@ -1,61 +1,79 @@
 
-- No passado era comum haver diversos servidores locais para executar diferentes funções
+# Visão geral do Docker
 
-Apache Microsoft ISS Banco de Dados
+Docker surgiu como solução para os problemas de infraestrutura em evolução ao longo dos anos. Para entender seu papel, é útil compreender como a computação corporativa evoluiu de modelos tradicionais até a containerização.
 
-Alto custo de manutenção de hardware, software, rede
-Grande ociosidade operacional, difícil mencionar cada máquina para otimziar os recursos máximo, maquinas com picos curtos de uso e longos momentos de ociosidade
-Baixa escalabilidade
-Dificil manutenção
+## Evolução da infraestrutura
 
-Máquinas Vitruasl virtualização
-Ataves do Hypervisor que trabalha a cima do sistema operacional, emulando o hardfisico dentro da máquina virtual
-Implantar as aplicações, permitindo criar diversa máquinas irtuais e aplicações
-aproveitando os recursos e reduzindo as ociosidade, baixo custo de hardware e melhor 
-aproveitamento e gerenciamento de software
+### Servidores dedicados (passado)
 
-Problemas da virtualização
-- nbecessidade de baixar o sistema de operacional em cada máquina virtual, dependo poderia ser difernete
-Cuistos de manutenção e configuraçao do SO
-Manter muitos SO gasta muito tempo
+No passado era comum haver diversos servidores locais para executar diferentes funções (Apache, Microsoft IIS, bancos de dados, etc.).
 
-Para contornar isso surgiu a tecnologia de container
-capacidade de empacotar um aplicação comt doas suas dpeendencais em uma nidade padronizada para desenovvimento de software, sem rpecisar de máquina virtual, sistema operacional
+**Problemas:**
+- Alto custo de manutenção de hardware, software e rede.
+- Grande ociosidade operacional; difícil otimizar recursos máximos quando máquinas tinham picos curtos de uso e longos períodos ociosos.
+- Baixa escalabilidade.
+- Difícil manutenção de múltiplas máquinas heterogêneas.
 
-Nos container satuam diretamente no sistema oepracional, comatilahndo os recursos do kernel com o host
-Divide o mesmo SO
-Compartilha recursos do Kernal (I/O, mem´roai, rede, etc)
+### Máquinas virtuais (intermediária)
 
-Necessidade dos containers
+A virtualização surgiu através do Hypervisor, que trabalha acima do sistema operacional emulando hardware dentro da máquina virtual. Isso permitiu:
 
-nems empre é viável baixar em um unico sistema operacional ou ter problemas no gereniamnto de recursos como portas
-memoria e dificuldade de gerenciar, é dificil isolar as aplicações. Esse é o papel do conteinaer
-essa
+- Criar diversas máquinas virtuais em um único host físico.
+- Melhor aproveitamento de recursos e redução de ociosidade.
+- Menor custo de hardware.
+- Melhor gerenciamento de software.
 
-Problemas de gerenciamento de utuilziado de recurusos como portas de rede
+**Problemas da virtualização:**
+- Necessidade de baixar o sistema operacional completo em cada máquina virtual (que pode ser diferente).
+- Custos de manutenção e configuração de cada SO.
+- Distribuição de atualizações é complexa e demorada.
 
-Necessidade de versão específica de uma linguagem
+### Containers (atual)
 
-Dificil isolar as paicações para evitar conflitos
+Para contornar esses problemas surgiu a tecnologia de container: capacidade de empacotar uma aplicação com todas as suas dependências em uma unidade padronizada para desenvolvimento de software, sem necessidade de máquina virtual ou sistema operacional completo.
 
-Aqui temos o Docker -> criação, comparilhamento e gerenciamento de container
+Nos containers:
+- Saturam diretamente no sistema operacional, compartilhando os recursos do kernel com o host.
+- Dividem o mesmo SO.
+- Compartilham recursos do kernel (I/O, memória, rede, etc.).
 
-## Apresentação do Docker
+## Por que containers são necessários
 
-Principal benefício do Coker é que ele permite que os usuarios empacorem m aplicativo com todas as suas dependcias em um unidade padronizada (container) para desenvoleimtno de software que poderá ser exetado ema mbvientes distinyos
+Mesmo em uma única máquina, surgem problemas de gerenciamento quando múltiplas aplicações competem por recursos:
 
-para o docker container é um espaço reservado na memória que é ececutato na memoria que é inpedemnte e isolado de outros containers ou do proprio host
+| Problema                        | Impacto                                         |
+|---------------------------------|-------------------------------------------------|
+| Conflito de portas de rede      | Duas aplicações não podem usar a mesma porta    |
+| Versões diferentes de linguagem | Uma app precisa Python 3.9, outra precisa 3.12  |
+| Dependências conflitantes       | Bibliotecas incompatíveis causam falhas         |
+| Isolamento insuficiente         | Falha em uma app afeta outras no mesmo servidor |
 
-é uma tecnologia de virtualização de ambientes, como máquinas virtuais
+Containers resolvem esses problemas fornecendo isolamento de processo, rede e sistema de arquivos.
 
-Diferenaca entre o container é no docker é comptado o kernel com o sistema operacional do host
+## O que é um container no Docker
 
-isso faz com que o desemenpi aumenteo e o consumo de memoria no container diminua
+Um container é um espaço reservado que é **independente e isolado** de outros containers ou do próprio host. Ele é uma tecnologia de virtualização de ambientes semelhante a máquinas virtuais, mas com uma diferença crucial:
 
-menos consumo de espaço físico
+**Diferença fundamental:** No Docker, o kernel é compartilhado com o sistema operacional do host, ao contrário das VMs que virtualizam todo o hardware.
 
-overhead mínimo possível
+**Efeitos práticos:**
+- Desempenho aumenta significativamente.
+- Consumo de memória diminui em relação às VMs.
+- Menor consumo de espaço em disco.
+- Overhead mínimo possível.
 
-Para poder ser ecuitado im container possui asscoaidao a ele um sistema de arquivos completo e isolado que contem as dependencias e bibliotecas necessarios
-Este sistema de arquivos somenteleitura ~sao conhecidas como imagem e aprtie delas é criada os container
-é a represnetao estática da aplicação e sas configiação, o contienr a execução na memoria do host
+Para execução em um container, está associado a ele:
+- Um sistema de arquivos completo e isolado contendo dependências e bibliotecas necessárias.
+- Este sistema de arquivos é imutável e conhecido como **imagem**.
+- A partir da imagem, criam-se **containers** (instâncias em execução).
+- A imagem é a representação estática da aplicação e sua configuração; o container é a execução em memória no host.
+
+## Principais benefícios do Docker
+
+Docker permite que usuários empacotem uma aplicação com todas as suas dependências em uma unidade padronizada (container) para desenvolvimento de software que poderá ser executado em ambientes distintos. Isso resolve:
+
+- **Inconsistência de ambientes:** dev, staging e produção funcionam identicamente.
+- **Isolamento:** cada app tem seu espaço isolado.
+- **Portabilidade:** "funciona no meu computador" deixa de ser desculpa.
+- **Escalabilidade:** fácil criar múltiplas instâncias paralelas.
