@@ -1,0 +1,4 @@
+docker run -p 6369:6379 --name redis-quickstart -d redis
+
+O uso do Redis em aplicações C# resolve gargalos de latência de entrada/saída ($I/O$).
+Enquanto bancos relacionais operam em disco com complexidade de busca que pode variar, o Redis mantém os dados em memória RAM, permitindo acessos com complexidade constante de $O(1)$ para chaves simples.Em um cenário de alta escalabilidade, o Redis atua como um amortecedor, impedindo que consultas repetitivas (como detalhes de um produto popular) sobrecarreguem o banco de dados principal. Isso reduz o custo operacional de infraestrutura e melhora drasticamente a experiência do usuário final através de tempos de resposta na casa dos milissegundos.

@@ -335,12 +335,66 @@ Dentro do container, você tem acesso a ferramentas padrão do .NET:
 | `dotnet restore`     | Restaurar pacotes NuGet |
 | `dotnet add package` | Adicionar pacote NuGet  |
 
-**Exemplo:**
+### Exemplo prático: Console App no container
 
 ```bash
 # Dentro do container
-dotnet new console -n meuapp
-cd meuapp
+mkdir demonet
+cd demonet
+dotnet new console
 dotnet build
 dotnet run
+```
+
+Exemplo de sessão no terminal:
+
+```bash
+plajiw@plajiw-notebook:~$ docker container ls
+CONTAINER ID   IMAGE                              COMMAND   CREATED          STATUS          PORTS   NAMES
+fec92c16b13b   mcr.microsoft.com/dotnet/sdk:8.0   "bash"    49 seconds ago   Up 47 seconds           demonet
+
+root@fec92c16b13b:/# mkdir demonet
+root@fec92c16b13b:/# cd demonet
+root@fec92c16b13b:/demonet# dotnet new console
+The template "Console App" was created successfully.
+
+Processing post-creation actions...
+Restoring /demonet/demonet.csproj:
+  Determining projects to restore...
+  Restored /demonet/demonet.csproj (in 78 ms).
+Restore succeeded.
+
+root@fec92c16b13b:/demonet# dotnet build
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  demonet -> /demonet/bin/Debug/net8.0/demonet.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+root@fec92c16b13b:/demonet# dotnet run
+Hello, World!
+```
+
+### Ciclo de vida e limpeza
+
+```bash
+# Listar todos os containers
+docker container ps -a
+
+# Reiniciar e anexar ao terminal de um container parado
+docker container start -ia demonet
+
+# Remover containers parados
+docker container prune
+
+# Listar imagens locais
+docker images
+
+# Remover imagem específica
+docker image rm 452a468a4bf9
+
+# Remover imagens sem uso
+docker image prune
 ```
