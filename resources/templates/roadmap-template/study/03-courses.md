@@ -1,6 +1,12 @@
-# Cursos relacionados
+# Cursos Relacionados
 
-- curso:
-  - plataforma:
-  - modulo atual:
-  - observacao:
+## [Título do Curso]
+
+**Informações gerais:**
+
+| Metadado | Conteúdo |
+|----------|----------|
+| **Plataforma** | [Udemy/Coursera/etc] |
+| **Link** | [URL do curso] |
+
+**Status:** [Seção/Módulo] - [Não iniciado/Iniciado/Concluído]

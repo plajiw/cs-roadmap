@@ -6,10 +6,10 @@ Este documento detalha o conceito de imagens Docker, seu sistema de camadas e os
 
 Containers são sempre baseados em imagens. Uma imagem é o "molde" e o container é a instância em execução.
 
-| Conceito  | Analogia com Programação Orientada a Objetos | Descrição                                                                                                                            |
-|-----------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| **Imagem**  | Classe                                       | Um arquivo binário imutável que inclui todos os requisitos para a criação de um container: código, dependências, bibliotecas e metadados. |
-| **Container** | Objeto (instância da classe)                 | Um processo em execução, isolado e baseado em uma imagem. É a instância viva e efêmera da aplicação.                                  |
+| Conceito      | Analogia com Programação Orientada a Objetos | Descrição                                                                                                                                 |
+|---------------|----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| **Imagem**    | Classe                                       | Um arquivo binário imutável que inclui todos os requisitos para a criação de um container: código, dependências, bibliotecas e metadados. |
+| **Container** | Objeto (instância da classe)                 | Um processo em execução, isolado e baseado em uma imagem. É a instância viva e efêmera da aplicação.                                      |
 
 Toda imagem é composta por uma ou mais camadas somente leitura, organizadas em um **Layered File System**. Uma vez criada, a imagem nunca é modificada.
 
@@ -75,8 +75,221 @@ docker build -t <nome-da-imagem>:<tag> .
 O comando `docker commit` cria uma nova imagem a partir das alterações feitas na camada de escrita de um container existente.
 
 **Por que não é uma boa prática?**
+
 - **Falta de Transparência:** É difícil saber como a imagem foi gerada, tornando-a uma "caixa preta".
 - **Não é Reproduzível:** O processo não é automatizado nem versionado, dependendo de passos manuais.
 - **Dificuldade de Manutenção:** Atualizar a imagem se torna um processo complexo e propenso a erros.
 
 Embora útil para depuração rápida ou experimentação, o `docker commit` deve ser evitado em ambientes de produção.
+
+## Dockerfile
+
+### Por que usar Dockerfile
+
+Nem sempre a imagem que desejamos usar está pronta da maneira que queremos. Muitas vezes é necessário ter uma imagem customizada com dependências, configurações e comportamentos específicos do projeto.
+
+Um **Dockerfile** é um arquivo de texto que contém instruções e comandos para construir uma imagem Docker automaticamente. Nele, definimos regras, informações e instruções que ficarão contidas na imagem final. As instruções são interpretadas linha por linha.
+
+### Conceito: Processo de Build
+
+O processo de build (Dockerfile → Image) atua no contexto do diretório onde o Dockerfile está localizado e seus subdiretórios. Docker lê as instruções sequencialmente e cria uma camada para cada uma delas.
+
+### Instruções comuns do Dockerfile
+
+| Instrução | Descrição |
+|-----------|-----------|
+| `FROM <imagem>` | Define a imagem base para construção |
+| `LABEL <chave>=<valor>` | Adiciona metadados à imagem (versão, descrição) |
+| `RUN <comando>` | Executa comando durante o build (instalações, setup) |
+| `WORKDIR <caminho>` | Define diretório de trabalho padrão no container |
+| `COPY <origem> <destino>` | Copia arquivos do host para a imagem |
+| `ADD <origem> <destino>` | Similar a COPY, mas com suporte a URLs e descompactação |
+| `ENV <chave>=<valor>` | Define variável de ambiente |
+| `EXPOSE <porta>` | Documenta qual porta a aplicação usa (não publica) |
+| `CMD <comando>` | Define comando padrão de execução |
+| `ENTRYPOINT <comando>` | Define o executável principal |
+
+### Exemplo prático: Construir imagem Nginx customizada
+
+Objetivo: Criar uma imagem baseada em Debian que instale e inicie um servidor Nginx.
+
+**Etapas do projeto:**
+
+1. Definir imagem base (Debian 12)
+2. Definir metadados (versão, descrição)
+3. Executar comando para instalar Nginx
+4. Exportar a porta que o servidor vai usar
+5. Definir o comando padrão de inicialização
+
+**Dockerfile:**
+
+```dockerfile
+FROM debian:12
+LABEL version="1.0" description="debian/nginx"
+RUN apt-get update && apt-get install -y nginx && apt-get clean
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+**Leitura do Dockerfile:**
+
+- `FROM debian:12`: Usa Debian 12 como base
+- `LABEL version="1.0"`: Adiciona rótulo de versão à imagem
+- `RUN apt-get update && apt-get install -y nginx`: Instala Nginx
+- `apt-get clean`: Remove cache de pacotes para reduzir tamanho
+- `EXPOSE 80`: Documenta que nginx usa porta 80
+- `CMD ["nginx", "-g", "daemon off;"]`: Nginx executa em foreground (não como daemon)
+
+### Construindo a imagem
+
+Use o comando `docker build` para construir a imagem a partir do Dockerfile:
+
+```bash
+docker build -t debianNginx/img:1.0 .
+```
+
+**Parâmetros:**
+- `-t debianNginx/img:1.0`: Tag (nome e versão) da imagem
+- `.`: Contexto (diretório onde o Dockerfile está)
+
+**Saída esperada:**
+
+```bash
+[+] Building 45.2s (7/7) FINISHED
+...
+```
+
+### Verificando a imagem criada
+
+Liste as imagens para confirmar o build:
+
+```bash
+docker images
+```
+
+**Exemplo de saída:**
+
+```
+REPOSITORY                       TAG       IMAGE ID       CREATED          SIZE
+debianNginx/img                  1.0       56353255bf3e  16 seconds ago   243MB
+```
+
+### Executar container a partir da imagem
+
+```bash
+docker container run -d -p 8080:80 --name ws1 debianNginx/img:1.0
+```
+
+**Saída (ID do container):**
+
+```
+95a30cb71e258f242efd26076222049675ad275bd73af9a5c82cfe474c77be23
+```
+
+Agora o servidor Nginx está rodando na porta 8080 do host.
+
+## Gerenciando Imagens
+
+### Listar imagens
+
+```bash
+docker images
+docker image ls
+```
+
+Ambos os comandos listam todas as imagens armazenadas localmente.
+
+### Download de imagens (docker pull)
+
+```bash
+# Baixar versão mais recente (latest)
+docker image pull redis
+
+# Baixar versão específica
+docker image pull redis:7.0
+```
+
+### Inspecionar detalhes de uma imagem
+
+```bash
+docker image inspect debianNginx/img:1.0
+```
+
+**Exemplo de saída (campos principais):**
+
+```json
+[
+  {
+    "Id": "sha256:56353255bf3e733d9280d5037760cd02c46c81e23cdceee0ead3fced0df6ea40",
+    "RepoTags": ["debianNginx/img:1.0"],
+    "Created": "2026-04-14T15:40:33.697375251Z",
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Size": 70925831,
+    "RootFS": {
+      "Type": "layers",
+      "Layers": [
+        "sha256:eaa7304345ff8f4a9b0628fc5c0cde472ffac173a24e660e3b0b98d9c38eeb83",
+        "sha256:b7def884a88c12a8400596c608354629e15db5b8fcaae704a0241cda65e8b5c7"
+      ]
+    },
+    "Config": {
+      "Cmd": ["nginx", "-g", "daemon off;"],
+      "ExposedPorts": {"80/tcp": {}},
+      "Labels": {"description": "debian/nginx", "version": "1.0"}
+    }
+  }
+]
+```
+
+| Campo | Significado |
+|-------|-------------|
+| `Id` | Identificador único da imagem (SHA256) |
+| `RepoTags` | Nomes/tags da imagem no repositório local |
+| `Size` | Tamanho total da imagem em bytes |
+| `Architecture` | Arquitetura (amd64, arm64, etc.) |
+| `Os` | Sistema operacional base |
+| `RootFS.Layers` | Camadas que compõem a imagem |
+| `Config.Cmd` | Comando padrão de execução |
+| `Config.ExposedPorts` | Portas documentadas |
+| `Config.Labels` | Metadados customizados |
+
+### Histórico de camadas
+
+```bash
+docker image history debianNginx/img:1.0
+```
+
+Mostra cada camada e como a imagem foi construída (útil para debugging e otimização).
+
+### Criar alias (tag) para imagem
+
+```bash
+docker image tag redis:latest redis:current
+```
+
+Neste exemplo, `redis:current` é um alias (referência) para `redis:latest`. Ambas apontam para a mesma imagem.
+
+## Publicando Imagens
+
+### Fazer login no Docker Hub
+
+```bash
+docker login
+```
+
+Insira suas credenciais (username e senha do Docker Hub).
+
+### Publicar imagem no repositório
+
+```bash
+docker push <nome-da-imagem>:<tag>
+```
+
+**Exemplo:**
+
+```bash
+docker push debianNginx/img:1.0
+```
+
+A imagem será armazenada no Docker Hub e poderá ser acessada por outros usuários (dependendo das configurações de privacidade).
