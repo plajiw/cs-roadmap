@@ -293,3 +293,33 @@ docker push debianNginx/img:1.0
 ```
 
 A imagem será armazenada no Docker Hub e poderá ser acessada por outros usuários (dependendo das configurações de privacidade).
+
+## Aplicação ASP.NET Core MVC
+
+.NET Core SKD 8
+visual studio code
+
+Criar projeto ASP.NET Core
+mkdir projetos
+cd projetos
+mkdir mvc1
+cd mvc1
+
+dotnet new mvc 
+ls -g 
+code.
+
+publicar a aplicação na past dist
+dotnet pubilish --configuraion Release --output dist
+
+empacto o projeto para implantçaõ em um sistema de hospedagem, especifque que o projeto compilado será copiada para a pasta dist
+
+cd dist
+ls -g
+
+mvc1.dll é o arquivo principal, ponto de entrada
+
+mcr.microsoft.com/dotnet/aspnet:6.0
+
+na raiz da aplicaçao
+criar um dockerfile
