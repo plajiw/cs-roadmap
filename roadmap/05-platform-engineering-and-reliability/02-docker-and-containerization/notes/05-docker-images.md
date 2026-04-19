@@ -296,30 +296,150 @@ A imagem será armazenada no Docker Hub e poderá ser acessada por outros usuár
 
 ## Aplicação ASP.NET Core MVC
 
-.NET Core SKD 8
-visual studio code
+Esta seção demonstra como containerizar uma aplicação ASP.NET Core MVC com Docker, desde a criação do projeto até a publicação em repositório.
 
-Criar projeto ASP.NET Core
+**Pré-requisitos:**
+- .NET Core SDK 8
+- Visual Studio Code
+- Docker instalado e configurado
+
+### Criar projeto ASP.NET Core MVC
+
+```bash
 mkdir projetos
 cd projetos
 mkdir mvc1
 cd mvc1
+dotnet new mvc
+code .
+```
 
-dotnet new mvc 
-ls -g 
-code.
+Este comando cria um novo projeto MVC padrão do ASP.NET Core.
 
-publicar a aplicação na past dist
-dotnet pubilish --configuraion Release --output dist
+### Publicar para Release
 
-empacto o projeto para implantçaõ em um sistema de hospedagem, especifque que o projeto compilado será copiada para a pasta dist
+Antes de containerizar, é necessário compilar a aplicação para uma distribuição otimizada:
 
+```bash
+dotnet publish -c Release -o dist
+```
+
+**O que acontece:**
+- `-c Release`: Compila em modo Release (otimizado para produção)
+- `-o dist`: Coloca os binários compilados na pasta `dist`
+- `mvc1.dll`: Arquivo principal gerado (ponto de entrada da aplicação)
+
+Verifique o conteúdo:
+
+```bash
 cd dist
-ls -g
+ls -la
+```
 
-mvc1.dll é o arquivo principal, ponto de entrada
+### Criar Dockerfile
 
-mcr.microsoft.com/dotnet/aspnet:6.0
+Na raiz da aplicação, crie um arquivo `Dockerfile` para definir a imagem:
 
-na raiz da aplicaçao
-criar um dockerfile
+```dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY dist/ .
+ENV ASPNETCORE_HTTP_PORTS=80
+ENTRYPOINT ["dotnet", "mvc1.dll"]
+```
+
+**Explicação das instruções:**
+
+| Instrução | Propósito |
+|-----------|----------|
+| `FROM mcr.microsoft.com/dotnet/aspnet:8.0` | Imagem base: runtime ASP.NET Core 8.0 |
+| `WORKDIR /app` | Define `/app` como diretório de trabalho do container |
+| `COPY dist/ .` | Copia binários compilados para `/app` |
+| `ENV ASPNETCORE_HTTP_PORTS=80` | Configura a porta HTTP como 80 |
+| `ENTRYPOINT ["dotnet", "mvc1.dll"]` | Define `mvc1.dll` como executável principal |
+
+### Construir a imagem
+
+```bash
+docker build -t mvc1/app1:1.0 .
+```
+
+**Parâmetros:**
+
+- `-t mvc1/app1:1.0`: Tag (nome do repositório / nome da imagem e versão)
+- `.`: Contexto (diretório onde o Dockerfile está localizado)
+
+Verifique se a imagem foi criada:
+
+```bash
+docker images
+```
+
+**Exemplo de saída:**
+
+```
+REPOSITORY         TAG      IMAGE ID       SIZE
+mvc1/app1          1.0      66c8226d99f6   321MB
+```
+
+### Executar container
+
+Existem duas formas equivalentes de executar o container:
+
+**Opção 1: Usar `docker run` diretamente**
+
+```bash
+docker run -d -p 3000:80 --name mvcproduto mvc1/app1:1.0
+```
+
+**Opção 2: Criar e depois iniciar**
+
+```bash
+docker container create -p 3000:80 --name mvcproduto mvc1/app1:1.0
+docker container start mvcproduto
+```
+
+**Parâmetros:**
+
+| Parâmetro | Descrição |
+|-----------|-----------|
+| `-d` | Executa em modo detached (background) |
+| `-p 3000:80` | Mapeia porta 80 do container para porta 3000 do host |
+| `--name mvcproduto` | Nome do container |
+
+### Verificar execução
+
+```bash
+docker logs mvcproduto
+curl -I http://localhost:3000
+```
+
+O comando `docker logs` exibe os logs do container, e `curl -I` verifica se a aplicação está respondendo na porta 3000.
+
+### Publicar imagem no Docker Hub
+
+Para compartilhar a imagem com outros usuários, publique-a no Docker Hub.
+
+**1. Criar conta no Docker Hub**
+
+Acesse [docker.io](https://hub.docker.com) e crie uma conta.
+
+**2. Fazer login localmente**
+
+```bash
+docker login -u <usuario> -p <senha>
+```
+
+**3. Etiquetar a imagem para o repositório**
+
+```bash
+docker image tag mvc1/app1:1.0 <usuario>/mvc1/app1:1.0
+```
+
+**4. Enviar para o Docker Hub**
+
+```bash
+docker push <usuario>/mvc1/app1:1.0
+```
+
+A imagem agora está disponível publicamente (ou privadamente, conforme suas configurações de privacidade no Docker Hub).
