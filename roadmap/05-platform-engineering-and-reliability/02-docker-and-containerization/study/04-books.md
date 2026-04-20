@@ -9,4 +9,4 @@
 | **Tipo** | Repositório GitHub |
 | **Link** | https://github.com/gomex/docker-para-desenvolvedores |
 
-**Status:** Introdução - Não iniciado
+**Status:** Por que usar Docker? - Iniciado

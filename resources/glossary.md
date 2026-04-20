@@ -821,6 +821,47 @@ Migration: AddEmailToUsers
 
 ## Sistemas & Infraestrutura
 
+### Containerização
+
+**Nível**: Intermediário  
+**Definição**: Técnica de virtualização em nível de sistema operacional que empacota uma aplicação e suas dependências em uma unidade isolada e portável chamada container, compartilhando o kernel do host.
+
+**Origem**: Conceito enraizado em `chroot` (Unix, 1979) e aprimorado com Linux Namespaces e cgroups. O Docker (2013) popularizou o modelo com uma interface acessível. OCI (Open Container Initiative) padronizou os formatos em 2015.
+
+**Explicação Técnica**: Um container é criado a partir de uma imagem e isolado por recursos do kernel Linux:
+
+- **Namespaces**: Isolam visibilidade de processos, rede, sistema de arquivos, usuários e IPC entre containers.
+- **cgroups (control groups)**: Limitam e monitoram uso de CPU, memória, disco e rede por container.
+- **Union File System (OverlayFS)**: Camadas sobrepostas compõem o sistema de arquivos da imagem de forma eficiente.
+
+**Contraste com Máquinas Virtuais**:
+
+| Aspecto           | Container                  | Máquina Virtual          |
+|-------------------|----------------------------|--------------------------|
+| Isolamento        | Namespace/cgroup (kernel)  | Hypervisor (hardware)    |
+| Kernel            | Compartilhado com o host   | Próprio por instância    |
+| Tempo de boot     | Milissegundos              | Segundos a minutos       |
+| Overhead          | Mínimo                     | Alto                     |
+| Portabilidade     | Alta (imagem OCI)          | Limitada (disco virtual) |
+| Densidade         | Alta (dezenas por host)    | Menor                    |
+
+**Componentes principais**:
+
+- **Imagem**: Snapshot imutável com sistema de arquivos em camadas. Base para criação de containers.
+- **Container**: Instância em execução de uma imagem. Efêmero por padrão.
+- **Registry**: Repositório central de imagens (ex: Docker Hub, GitHub Container Registry).
+- **Runtime**: Componente que executa containers (ex: containerd, runc).
+
+**Casos de uso**:
+
+- Garantir paridade entre ambientes (dev, staging, produção).
+- Empacotar microserviços de forma independente e escalável.
+- Execução de pipelines de CI/CD em ambientes limpos e reproduzíveis.
+
+**Relacionado**: Docker, Kubernetes, OCI, Imagem, cgroups, Namespaces, Microserviços, Orquestração
+
+---
+
 ### Bootstrap
 
 **Nível**: Intermediário  
@@ -919,6 +960,296 @@ Migration: AddEmailToUsers
 - Thrashing: Muitas page faults, sistema fica lento
 
 **Relacionado**: Memory Management, Paginação, Swap, Page Fault
+
+---
+
+### cgroups (Control Groups)
+
+**Nível**: Avançado  
+**Definição**: Mecanismo do kernel Linux que permite limitar, contabilizar e isolar uso de recursos (CPU, memória, disco, rede) por processos ou grupos de processos.
+
+**Origem**: Introduzido no Linux 2.6.24 (2008) como parte da estratégia de virtualização em nível de kernel. Fundamental para a implementação eficiente de containers.
+
+**Explicação Técnica**: cgroups organiza processos em hierarquias e aplica limites por recurso:
+
+- **Memória**: define limite máximo de RAM, swap e reclama sob pressão
+- **CPU**: aloca frações de tempo de processador (shares)
+- **I/O**: regula leitura/escrita em disco
+- **Network**: controla taxa de transferência de rede
+- **Devices**: restringe acesso a dispositivos
+
+**Estrutura**:
+
+- **Hierarquia**: árvore de grupos, cada nó pode ter limites próprios
+- **Subsystem**: controlador para um recurso específico
+- **Cgroup**: agrupamento de processos com políticas compartilhadas
+
+**Exemplo prático (sem Docker)**:
+
+```bash
+# Limitar processo a 512MB
+cgcreate -g memory:/limite512m
+echo "536870912" > /cgroup/memory/limite512m/memory.limit_in_bytes
+cgexec -g memory:/limite512m ./app
+```
+
+**Uso em containers**:
+
+Containers usam cgroups internamente para garantir isolamento de recursos e fair-share entre múltiplas instâncias no mesmo host.
+
+**Relacionado**: Namespaces, Containerização, Docker, Kernel, Resource Isolation
+
+---
+
+### Namespaces
+
+**Nível**: Avançado  
+**Definição**: Mecanismo do kernel Linux que isola e virtualiza recursos do sistema operacional, permitindo que grupos de processos tenham visões independentes de recursos globais como PID, rede, sistema de arquivos e usuários.
+
+**Origem**: Desenvolvido para Linux 2.4.19 (2002), expandido gradualmente. Essencial para a implementação de containers.
+
+**Explicação Técnica**: Existem vários tipos de namespaces, cada um isolando um aspecto diferente:
+
+| Namespace | Isola | Exemplo |
+| --------- | ----- | ------- |
+| **PID** | Process ID e hierarquia de processos | Dois containers não veem processos um do outro |
+| **Network** | Interfaces de rede, tabelas de roteamento, firewall | Cada container vê apenas suas interfaces |
+| **Mount** | Sistema de arquivos visível | Cada container tem raízes de arquivo independentes |
+| **UTS** | Hostname e domínio | Containers podem ter nomes distintos |
+| **User** | UID/GID e mapeamento de usuários | Root em um container ≠ root no host |
+| **IPC** | Fila de mensagens, shared memory, semáforos | Containers isolados em comunicação inter-processo |
+
+**Estrutura de isolamento**:
+
+```bash
+# Exemplo: criar namespace novo
+unshare --pid --net --mount /bin/bash
+# Novo shell tem seu próprio PID 1, interfaces de rede e root fs
+```
+
+**Profundidade técnica**:
+
+- Cada processo herda namespaces de seu pai
+- Múltiplos processos podem compartilhar o mesmo namespace (mesmo grupo)
+- Trocar de namespace custa pouco (uma chamada de sistema)
+
+**Aplicação em containers**:
+
+Containers combinam namespaces + cgroups para virtualizar o sistema operacional de forma eficiente, permitindo múltiplas instâncias rodarem isoladamente no mesmo kernel.
+
+**Relacionado**: cgroups, Containerização, Docker, Isolamento, Kernel
+
+---
+
+### Docker
+
+**Nível**: Intermediário  
+**Definição**: Plataforma de containerização que simplifica empacotamento, distribuição e execução de aplicações usando containers baseados em imagens padronizadas, com interface de linha de comando acessível.
+
+**Origem**: Lançado em 2013 por Solomon Hykes como projeto open-source. Revolucionou containerização ao abstrair a complexidade de namespaces/cgroups em uma UI e fluxo de trabalho intuitivo.
+
+**Explicação Técnica**: Docker é composto por:
+
+- **Docker Engine**: runtime que gerencia containers (usa containerd + runc em background)
+- **Docker CLI**: interface de linha de comando para executar comandos
+- **Dockerfile**: arquivo de configuração para construir imagens
+- **Docker Image**: snapshot imutável de um sistema de arquivos em camadas
+- **Docker Container**: instância em execução de uma imagem
+
+**Fluxo típico**:
+
+```bash
+# 1. Criar Dockerfile
+echo 'FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y python3
+COPY app.py /app/
+CMD ["python3", "/app/app.py"]' > Dockerfile
+
+# 2. Construir imagem
+docker build -t minha-app:1.0 .
+
+# 3. Executar container
+docker run -d --name app1 minha-app:1.0
+```
+
+**Componentes principais**:
+
+- **Dockerfile**: receita para construir imagem
+- **Imagem**: template immutável com camadas
+- **Container**: processo isolado baseado em imagem
+- **Registry**: repositório central (Docker Hub, GitHub Container Registry)
+- **Volume**: armazenamento persistente
+- **Network**: isolamento e comunicação entre containers
+
+**Vantagens**:
+
+- Portabilidade: mesmo container roda em dev, staging, produção
+- Eficiência: inicia em milissegundos, overhead mínimo
+- Isolamento: múltiplos containers no mesmo host
+- Reprodutibilidade: Dockerfile documenta e reproduz ambiente
+
+**Limitações**:
+
+- Compartilha kernel do host (requer Linux ou VM no macOS/Windows)
+- Segurança: escape de container pode afetar host
+- Não é verdadeira virtualização
+
+**Relacionado**: Containerização, Kubernetes, Imagem, OCI, Docker Hub, cgroups, Namespaces
+
+---
+
+### Imagem (Docker/OCI)
+
+**Nível**: Intermediário  
+**Definição**: Arquivo snapshot imutável que contém sistema de arquivos completo, dependências, código e metadados para criar containers. Estruturado em camadas sobrepostas para eficiência.
+
+**Origem**: Conceito derivado de snapshots VM, adapado para containers. Docker popularizou o modelo de camadas para reutilização e redução de espaço.
+
+**Explicação Técnica**: Estrutura em camadas:
+
+```
+┌─────────────────────┐
+│  Aplicação (RW)     │  ← Camada do container (efêmera)
+├─────────────────────┤
+│  app.py + deps      │  ← Camada criada por COPY/RUN
+├─────────────────────┤
+│  python:3.11        │  ← Imagem base (somente leitura)
+├─────────────────────┤
+│  ubuntu:22.04       │  ← Sistema base (somente leitura)
+└─────────────────────┘
+```
+
+**Componentes**:
+
+- **Base Layer**: SO mínimo (alpine, debian, scratch)
+- **Application Layers**: dependências, código, configurações
+- **Metadata**: variáveis de ambiente, porta padrão, CMD/ENTRYPOINT
+- **Union FS**: OverlayFS (Linux) une camadas transparentemente
+
+**Lifecycle**:
+
+```bash
+docker build .      # Constrói imagem a partir de Dockerfile
+docker images       # Lista imagens locais
+docker push         # Envia para registry (Docker Hub, etc)
+docker pull         # Baixa do registry
+docker run <image>  # Cria container a partir de imagem
+```
+
+**Imagens bem construídas**:
+
+- Camadas reutilizáveis (base stável, código na tela inferior)
+- Tamanho mínimo (sem ferramentas de build finais)
+- Multi-stage builds para reduzir tamanho
+
+**Relacionado**: Docker, Containerização, Dockerfile, Registry, OCI, OverlayFS
+
+---
+
+### OCI (Open Container Initiative)
+
+**Nível**: Avançado  
+**Definição**: Padrão aberto mantido pela Linux Foundation que define especificações para formatos de imagem de container e comportamento de runtime, garantindo portabilidade entre implementações.
+
+**Origem**: Criado em 2015 após Docker perceber a necessidade de padronização. Membros incluem Docker, CoreOS, Red Hat, Google, Microsoft.
+
+**Explicação Técnica**: OCI define duas especificações principais:
+
+**1. Image Spec (Formato de Imagem)**:
+
+- Define estrutura de camadas, metadata, blobs de conteúdo
+- Garante portabilidade: imagem OCI roda em qualquer runtime OCI-compatível
+- Baseado no formato Docker v2.2, mas agnóstico
+
+**2. Runtime Spec (Comportamento de Execução)**:
+
+- Define como runtimes devem criar/gerenciar containers
+- Aborda: criação, execução, parada, limpeza
+- Exemplos: `runc` (referência), containerd, Podman
+
+**Estrutura de uma imagem OCI**:
+
+```
+image-layout/
+├── blobs/
+│   ├── sha256/
+│   │   ├── config
+│   │   ├── layer1
+│   │   └── layer2
+├── oci-layout
+└── index.json
+```
+
+**Vantagens**:
+
+- **Portabilidade**: imagem OCI roda em Docker, Podman, CRI-O, etc
+- **Neutralidade**: não presa a um vendor específico
+- **Interoperabilidade**: standards garantem compatibilidade
+
+**Prática**:
+
+```bash
+# Imagens Docker v2+ são compatíveis com OCI
+docker build -t minha-app .  # Cria imagem OCI-compatível
+podman run minha-app         # Roda em Podman também
+```
+
+**Relacionado**: Containerização, Docker, Imagem, Runtime, Kubernetes, Podman, containerd
+
+---
+
+### Orquestração (Containers)
+
+**Nível**: Avançado  
+**Definição**: Gerenciamento automatizado do ciclo de vida de múltiplos containers: provisionamento, scaling, atualização, recuperação de falhas e comunicação entre serviços em ambientes distribuídos.
+
+**Origem**: Necessário quando arquitetura microserviços cresce para dezenas/centenas de containers. Kubernetes (2014, Google) se tornou padrão de facto.
+
+**Explicação Técnica**: Orquestrador resolve problemas de escala:
+
+**Desafios sem orquestração**:
+
+- Como escalar 10 containers de API quando carga aumenta?
+- O que fazer quando um container falha?
+- Como rotear tráfego entre múltiplas réplicas?
+- Como fazer rolling update sem downtime?
+- Como gerenciar rede entre centenas de containers?
+
+**Funções de um orquestrador**:
+
+| Função | Descrição |
+| ------ | --------- |
+| **Scheduling** | Decide qual host executa qual container |
+| **Scaling** | Cria/remove réplicas automaticamente |
+| **Load Balancing** | Distribui tráfego entre instâncias |
+| **Self-healing** | Reinicia containers falhados |
+| **Rolling Updates** | Atualiza versão sem downtime |
+| **Service Discovery** | Localiza serviços dinamicamente |
+| **Volume Orchestration** | Gerencia armazenamento persistente |
+
+**Orquestradores populares**:
+
+| Orquestrador | Escopo | Caso de Uso |
+| ------------ | ------ | ----------- |
+| **Kubernetes** | Completo, complexo | Produção, scale grande |
+| **Docker Swarm** | Simples, nativo | Pequeno/médio, simplicity |
+| **Nomad** | Agnóstico (containers + VMs) | Multi-cloud, heterogêneo |
+| **ECS (AWS)** | Gerenciado em nuvem | AWS-nativo |
+
+**Conceitos Kubernetes (padrão de facto)**:
+
+- **Pod**: menor unidade, agrupa 1+ containers
+- **Deployment**: gerencia réplicas de pods
+- **Service**: abstrai acesso a pod (load balancer)
+- **ConfigMap/Secret**: variáveis de ambiente e credenciais
+- **Persistent Volume**: armazenamento durador
+
+**Trade-offs**:
+
+- **Benefício**: automação em larga escala
+- **Custo**: complexidade operacional cresce, requer expertise
+
+**Relacionado**: Kubernetes, Docker, Containers, Scaling, Microserviços, Service Discovery
 
 ---
 
