@@ -9,6 +9,14 @@ Documento que padroniza os critérios e técnicas aplicadas ao melhorar e reorga
 3. **Linguagem direta e técnica** — PT-BR, sem metáforas ou exemplos lúdicos, focado em conceitos práticos.
 4. **Exemplos acadêmicos/realistas** — Exemplos curtos, focados no conceito, aplicáveis em cenários reais.
 
+## Regras de Formatação Markdown
+
+1. no-bare-urls: URLs devem ser formatados como links markdown `[texto](url)` ou <>, não como texto cru.
+2. no-multiple-top-level-headings: Apenas um `#` por documento, para título principal. Seções secundárias devem usar `##` ou `###`.
+3. no-mixed-content: Evitar misturar explicações, comandos e exemplos sem estrutura clara. Separar em seções ou subsecções.
+4. tabelas devem ser formatadas corretamente, com cabeçalhos e alinhamento, para facilitar leitura e comparação.
+5. blocos de código devem ser usados para comandos, exemplos e saídas, com linguagem especificada para destaque de sintaxe.
+
 ## Estrutura Recomendada
 
 ### Nível 1: Título Principal
@@ -53,10 +61,10 @@ Quebrar seções grandes em subsecções quando houver múltiplos subtópicos. M
 **Exemplo padrão:**
 
 ```markdown
-| Elemento | Descrição |
-|----------|-----------|
-| Item 1 | Explicação breve |
-| Item 2 | Explicação breve |
+| Elemento | Descrição        |
+| -------- | ---------------- |
+| Item 1   | Explicação breve |
+| Item 2   | Explicação breve |
 ```
 
 ### Blocos de Código Estruturados
@@ -116,10 +124,10 @@ Explica os blocos de construção antes de uso prático.
 
 Breve introdução.
 
-| Conceito | Analogia | Descrição |
-|----------|----------|-----------|
-| Item A | Paralelo | O que é e por que importa |
-| Item B | Paralelo | O que é e por que importa |
+| Conceito | Analogia | Descrição                 |
+| -------- | -------- | ------------------------- |
+| Item A   | Paralelo | O que é e por que importa |
+| Item B   | Paralelo | O que é e por que importa |
 
 Detalhes adicionais em parágrafos ou subsecções se necessário.
 ```

@@ -56,11 +56,11 @@
 
 ### Linux Namespaces
 
-| Metadado  | Conteúdo                                                |
-| --------- | ------------------------------------------------------- |
-| **Tipo**  | Documentação                                            |
-| **Fonte** | man7.org                                                |
-| **Link**  | https://man7.org/linux/man-pages/man7/namespaces.7.html |
+| Metadado  | Conteúdo                                                  |
+| --------- | --------------------------------------------------------- |
+| **Tipo**  | Documentação                                              |
+| **Fonte** | man7.org                                                  |
+| **Link**  | <https://man7.org/linux/man-pages/man7/namespaces.7.html> |
 
 ### Control Groups (cgroups)
 
