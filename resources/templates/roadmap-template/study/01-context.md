@@ -1,11 +1,17 @@
-# Contexto de estudo
+# Contexto de Estudo
 
-## Objetivo atual
+## Objetivo Atual
 
--
+[Descrever o objetivo principal desta sessão de estudo]
 
 ## Estado
 
-- status:
-- prioridade:
-- proxima acao:
+| Campo            | Valor                                             |
+| ---------------- | ------------------------------------------------- |
+| **Status**       | Não iniciado \| Iniciado \| Em pausa \| Concluído |
+| **Prioridade**   | Baixa \| Média \| Alta \| Crítica                 |
+| **Próxima ação** | [Próximo passo a executar]                        |
+
+## Notas
+
+[Observações gerais sobre o estudo, contexto importante, dependências, bloqueadores]

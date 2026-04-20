@@ -4,9 +4,9 @@
 
 **Informações gerais:**
 
-| Metadado | Conteúdo |
-|----------|----------|
-| **Tipo** | Repositório GitHub |
-| **Link** | https://github.com/gomex/docker-para-desenvolvedores |
+| Metadado     | Conteúdo                                             |
+| ------------ | ---------------------------------------------------- |
+| **Tipo**     | Repositório GitHub                                   |
+| **Link**     | https://github.com/gomex/docker-para-desenvolvedores |
+| **Capítulo** | 8. Comandos básicos                                  |
 
-**Status:** Por que usar Docker? - Iniciado
