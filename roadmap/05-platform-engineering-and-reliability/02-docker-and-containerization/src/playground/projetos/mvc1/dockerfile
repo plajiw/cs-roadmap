@@ -1,5 +1,0 @@
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
-WORKDIR /app
-COPY dist/ .
-ENV ASPNETCORE_HTTP_PORTS=80
-ENTRYPOINT ["dotnet", "mvc1.dll"]
