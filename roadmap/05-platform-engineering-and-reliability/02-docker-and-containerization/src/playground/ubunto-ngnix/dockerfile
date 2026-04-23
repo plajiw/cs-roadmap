@@ -1,0 +1,5 @@
+# https://docs.docker.com/reference/dockerfile
+FROM ubuntu:16.04
+RUN apt-get update && apt-get install nginx -y		# Comandos que serão executados nesse ambiente
+COPY arquivo_teste /tmp/arquivo_teste
+CMD bash											# Informar qual comando será executado por padrão
