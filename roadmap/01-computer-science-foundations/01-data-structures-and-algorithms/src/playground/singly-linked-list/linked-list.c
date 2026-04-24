@@ -145,7 +145,7 @@ void popEnd(LinkedList *list)
     list->size--;
 }
 
-void popPos(LinkedList *list, int item, int pos)
+void popPos(LinkedList *list,  item, int pos)
 {
     if (isEmpty(list))
         return;
