@@ -38,7 +38,7 @@ void findItem(LinkedList *list, int item);
 
 void changeItem(LinkedList *list, int item, int pos);
 
-void shortLinkedList(LinkedList *list);
+void sortLinkedList(LinkedList *list);
 
 void concatLinkedList(LinkedList *list1, LinkedList *list2);
 

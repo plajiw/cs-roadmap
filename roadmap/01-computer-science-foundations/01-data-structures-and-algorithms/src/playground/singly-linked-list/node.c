@@ -9,4 +9,6 @@ Node *createNode(int item, Node *next)
         newNode->data = item;
         newNode->reference = next;
     }
+
+    return newNode;
 }
