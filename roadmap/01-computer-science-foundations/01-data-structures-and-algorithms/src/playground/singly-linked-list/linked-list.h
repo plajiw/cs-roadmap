@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include <node.h>
+#include "node.c"
 
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
@@ -28,7 +28,7 @@ void popBegin(LinkedList *list);
 
 void popEnd(LinkedList *list);
 
-void popPos(LinkedList *list, int item, int pos);
+void popPos(LinkedList *list, int pos);
 
 void printLinkedList(LinkedList *list);
 

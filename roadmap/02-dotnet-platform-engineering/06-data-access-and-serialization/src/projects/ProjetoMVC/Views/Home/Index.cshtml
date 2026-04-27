@@ -1,0 +1,66 @@
+﻿@model List<ProjetoMVC.Models.Produto>
+
+<h2>Gerenciamento de Produtos</h2>
+
+<hr />
+
+<h4>Buscar Produtos</h4>
+<form asp-action="Produtos" method="get" class="row g-3">
+    <div class="col-md-3">
+        <label>Nome</label>
+        <input type="text" name="ComNome" class="form-control" placeholder="Ex: Notebook" />
+    </div>
+    <div class="col-md-3">
+        <label>Categoria</label>
+        <input type="text" name="ComCategoria" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label>Descrição</label>
+        <input type="text" name="ComDescricao" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label>Preço Exato</label>
+        <input type="number" step="0.01" name="ComPreco" class="form-control" />
+    </div>
+    <div class="col-md-1 align-self-end">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </div>
+    <div class="col-md-1 align-self-end">
+        <a asp-action="Produtos" class="btn btn-secondary">Limpar</a>
+    </div>
+</form>
+
+<hr />
+
+<h4>Adicionar Produto</h4>
+<hr />
+
+<h4>Lista de Produtos</h4>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Preço</th>
+        <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var produto in Model)
+    {
+        <tr>
+            <td>@produto.Id.ToString().Substring(0,8)...</td>
+            <td>@produto.Nome</td>
+            <td>@produto.Categoria</td>
+            <td>@produto.Preco.ToString("C")</td>
+            <td>
+                <form asp-action="RemoverProduto" method="post">
+                    <input type="hidden" name="id" value="@produto.Id" />
+                    <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

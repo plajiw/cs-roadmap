@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "linked-list.h"
+#include "linked-list.c"
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
     printf("Lista: ");
     printLinkedList(&list);
 
-    printf("Inserindo 99 na posicao 2\n");
+    printf("Inserir 99 na posicao 2\n");
     pushPos(&list, 99, 2);
 
     printf("Lista: ");
@@ -30,7 +30,7 @@ int main()
     printf("Apos popEnd: ");
     printLinkedList(&list);
 
-    popPos(&list, 0, 1);
+    popPos(&list, 1);
     printf("Apos popPos(1): ");
     printLinkedList(&list);
 

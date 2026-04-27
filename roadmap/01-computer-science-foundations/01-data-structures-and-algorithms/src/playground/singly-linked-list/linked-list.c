@@ -145,7 +145,7 @@ void popEnd(LinkedList *list)
     list->size--;
 }
 
-void popPos(LinkedList *list,  item, int pos)
+void popPos(LinkedList *list, int pos)
 {
     if (isEmpty(list))
         return;
@@ -199,6 +199,7 @@ void getMinMax(LinkedList *list)
     {
         if (current->data < min)
             min = current->data;
+            
         if (current->data > max)
             max = current->data;
 
@@ -252,9 +253,9 @@ void sortLinkedList(LinkedList *list)
         trocou = false;
         for (Node *cur = list->begin; cur->reference != NULL; cur = cur->reference) {
             if (cur->data > cur->reference->data) {
-                int tmp = cur->data;
+                int temp = cur->data;
                 cur->data = cur->reference->data;
-                cur->reference->data = tmp;
+                cur->reference->data = temp;
                 trocou = true;
             }
         }
