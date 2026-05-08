@@ -1,4 +1,6 @@
-﻿var ingredients = new Ingredient[]
+﻿using Cookies_Cookbook;
+
+var ingredients = new Ingredient[]
 {
     new Ingredient { Id = 1, Name = "Flour", Instructions = "Use all-purpose flour for best results." },
     new Ingredient { Id = 2, Name = "Sugar", Instructions = "Granulated sugar works well in cookie recipes." },
